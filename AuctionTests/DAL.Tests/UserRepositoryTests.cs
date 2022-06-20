@@ -28,6 +28,20 @@ namespace AuctionTests.DAL.Tests
             Assert.That(user, Is.EqualTo(expected).Using(new UserEqualityComparer()), message: "GetByIdAsync method works incorrect");
         }
 
+        [Test]
+        public async Task UserRepository_GetAllAsync_ReturnsAllValues()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var userRepository = new UserRepository(context);
+
+            var users = await userRepository.GetAllAsync();
+
+            Assert.That(users, Is.EqualTo(ExpectedUsers).Using(new UserEqualityComparer()), message: "GetAllAsync method works incorrect");
+        }
+
+
+
         private static IEnumerable<User> ExpectedUsers =>
             new[]
             {
