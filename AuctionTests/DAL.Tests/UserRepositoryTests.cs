@@ -101,6 +101,28 @@ namespace AuctionTests.DAL.Tests
             }).Using(new UserEqualityComparer()), message: "Update method works incorrect");
         }
 
+        [Test]
+        public async Task UserRepository_GetByIdWithDetailsAsync_ReturnsWithIncludedEntities()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var userRepository = new UserRepository(context);
+
+            var user = await userRepository.GetByIdWithDetailsAsync(1);
+
+            var expected = ExpectedUsers.FirstOrDefault(x => x.Id == 1);
+
+            Assert.That(user,
+                Is.EqualTo(expected).Using(new UserEqualityComparer()), message: "GetByIdWithDetailsAsync method works incorrect");
+
+            Assert.That(user.Orders.ToList(),
+                Is.EqualTo(ExpectedOrders.Where(i => i.UserId == expected.Id)).Using(new OrderEqualityComparer()), message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+
+            Assert.That(user.Orders.SelectMany(i => i.OrderDetails).OrderBy(i => i.Id),
+                Is.EqualTo(ExpectedOrdersDetails.Where(i => i.OrderId == 1 || i.OrderId == 2)).Using(new OrderDetailEqualityComparer()), message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+        }
+
+
 
 
         private static IEnumerable<User> ExpectedUsers =>
