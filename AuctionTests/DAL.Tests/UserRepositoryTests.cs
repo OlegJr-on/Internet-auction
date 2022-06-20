@@ -40,6 +40,19 @@ namespace AuctionTests.DAL.Tests
             Assert.That(users, Is.EqualTo(ExpectedUsers).Using(new UserEqualityComparer()), message: "GetAllAsync method works incorrect");
         }
 
+        [Test]
+        public async Task UserRepository_AddAsync_AddsValueToDatabase()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var userRepository = new UserRepository(context);
+            var user = new User { Id = 3 };
+
+            await userRepository.AddAsync(user);
+            await context.SaveChangesAsync();
+
+            Assert.That(context.Users.Count(), Is.EqualTo(3), message: "AddAsync method works incorrect");
+        }
 
 
         private static IEnumerable<User> ExpectedUsers =>
