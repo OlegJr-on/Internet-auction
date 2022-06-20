@@ -67,6 +67,42 @@ namespace AuctionTests.DAL.Tests
             Assert.That(context.Users.Count(), Is.EqualTo(1), message: "DeleteByIdAsync works incorrect");
         }
 
+        [Test]
+        public async Task UserRepository_Update_UpdatesEntity()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var userRepository = new UserRepository(context);
+            var user = new User
+            {
+                Id = 1,
+                Name = "Oleh",
+                Surname = "Mandra",
+                Location = "Ukraine,Kyiv",
+                Email = "mandra@gmail.com",
+                Password = "123",
+                AccessLevel = Role.Admin,
+                PhoneNumber = "095-937-3031"
+            };
+
+            userRepository.Update(user);
+            await context.SaveChangesAsync();
+
+            Assert.That(user, Is.EqualTo(new User
+            {
+                Id = 1,
+                Name = "Oleh",
+                Surname = "Mandra",
+                Location = "Ukraine,Kyiv",
+                Email = "mandra@gmail.com",
+                Password = "123",
+                AccessLevel = Role.Admin,
+                PhoneNumber = "095-937-3031"
+            }).Using(new UserEqualityComparer()), message: "Update method works incorrect");
+        }
+
+
+
         private static IEnumerable<User> ExpectedUsers =>
             new[]
             {
