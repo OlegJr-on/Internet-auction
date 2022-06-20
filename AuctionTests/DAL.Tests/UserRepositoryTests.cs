@@ -13,7 +13,20 @@ namespace AuctionTests.DAL.Tests
     public class UserRepositoryTests
     {
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task UserRepository_GetByIdAsync_ReturnsSingleValue(int id)
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
 
+            var userRepository = new UserRepository(context);
+
+            var user = await userRepository.GetByIdAsync(id);
+
+            var expected = ExpectedUsers.FirstOrDefault(x => x.Id == id);
+
+            Assert.That(user, Is.EqualTo(expected).Using(new UserEqualityComparer()), message: "GetByIdAsync method works incorrect");
+        }
 
         private static IEnumerable<User> ExpectedUsers =>
             new[]
