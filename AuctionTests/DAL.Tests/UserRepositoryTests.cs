@@ -54,6 +54,18 @@ namespace AuctionTests.DAL.Tests
             Assert.That(context.Users.Count(), Is.EqualTo(3), message: "AddAsync method works incorrect");
         }
 
+        [Test]
+        public async Task UserRepository_DeleteByIdAsync_DeletesEntity()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var userRepository = new UserRepository(context);
+
+            await userRepository.DeleteByIdAsync(1);
+            await context.SaveChangesAsync();
+
+            Assert.That(context.Users.Count(), Is.EqualTo(1), message: "DeleteByIdAsync works incorrect");
+        }
 
         private static IEnumerable<User> ExpectedUsers =>
             new[]
