@@ -12,6 +12,20 @@ namespace AuctionTests.DAL.Tests
     [TestFixture]
     public class LotRepositoryTests {
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task LotRepository_GetByIdAsync_ReturnsSingleValue(int id)
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var LotRepository = new LotRepository(context);
+
+            var lot = await LotRepository.GetByIdAsync(id);
+
+            var expected = ExpectedLots.FirstOrDefault(x => x.Id == id);
+
+            Assert.That(lot, Is.EqualTo(expected).Using(new LotEqualityComparer()), message: "GetByIdAsync method works incorrect");
+        }
 
 
         private static IEnumerable<Lot> ExpectedLots =>
