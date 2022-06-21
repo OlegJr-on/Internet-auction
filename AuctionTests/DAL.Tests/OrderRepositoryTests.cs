@@ -13,7 +13,19 @@ namespace AuctionTests.DAL.Tests
     [TestFixture]
     public class OrderRepositoryTests
     {
+        [TestCase(1)]
+        [TestCase(3)]
+        public async Task OrderRepository_GetByIdAsync_ReturnsSingleValue(int id)
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
 
+            var orderRepository = new OrderRepository(context);
+            var order = await orderRepository.GetByIdAsync(id);
+
+            var expected = ExpectedOrders.FirstOrDefault(x => x.Id == id);
+
+            Assert.That(order, Is.EqualTo(expected).Using(new OrderEqualityComparer()), message: "GetByIdAsync method works incorrect");
+        }
 
 
         private static IEnumerable<Order> ExpectedOrders =>
