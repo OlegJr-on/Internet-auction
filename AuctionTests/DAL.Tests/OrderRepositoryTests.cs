@@ -27,6 +27,16 @@ namespace AuctionTests.DAL.Tests
             Assert.That(order, Is.EqualTo(expected).Using(new OrderEqualityComparer()), message: "GetByIdAsync method works incorrect");
         }
 
+        [Test]
+        public async Task OrderRepository_GetAllAsync_ReturnsAllValues()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var orderRepository = new OrderRepository(context);
+            var orders = await orderRepository.GetAllAsync();
+
+            Assert.That(orders, Is.EqualTo(ExpectedOrders).Using(new OrderEqualityComparer()), message: "GetAllAsync method works incorrect");
+        }
 
         private static IEnumerable<Order> ExpectedOrders =>
             new[]
