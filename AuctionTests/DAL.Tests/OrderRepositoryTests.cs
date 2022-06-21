@@ -65,6 +65,32 @@ namespace AuctionTests.DAL.Tests
             Assert.That(context.Orders.Count(), Is.EqualTo(2), message: "DeleteByIdAsync works incorrect");
         }
 
+        [Test]
+        public async Task OrderRepository_Update_UpdatesEntity()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var orderRepository = new OrderRepository(context);
+            var order = new Order
+            {
+                Id = 1,
+                OperationDate = new DateTime(2021, 9, 10),
+                UserId = 1
+            };
+
+            orderRepository.Update(order);
+            await context.SaveChangesAsync();
+
+            Assert.That(order, Is.EqualTo(new Order
+            {
+                Id = 1,
+                OperationDate = new DateTime(2021, 9, 10),
+                UserId = 1
+            }).Using(new OrderEqualityComparer()), message: "Update method works incorrect");
+        }
+
+
+
         private static IEnumerable<Order> ExpectedOrders =>
             new[]
             {
