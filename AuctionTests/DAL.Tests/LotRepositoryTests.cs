@@ -27,6 +27,17 @@ namespace AuctionTests.DAL.Tests
             Assert.That(lot, Is.EqualTo(expected).Using(new LotEqualityComparer()), message: "GetByIdAsync method works incorrect");
         }
 
+        [Test]
+        public async Task LotRepository_GetAllAsync_ReturnsAllValues()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var LotRepository = new LotRepository(context);
+
+            var lots = await LotRepository.GetAllAsync();
+
+            Assert.That(lots, Is.EqualTo(ExpectedLots).Using(new LotEqualityComparer()), message: "GetAllAsync method works incorrect");
+        }
 
         private static IEnumerable<Lot> ExpectedLots =>
             new[]
