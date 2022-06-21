@@ -53,7 +53,18 @@ namespace AuctionTests.DAL.Tests
             Assert.That(context.Lots.Count(), Is.EqualTo(3), message: "AddAsync method works incorrect");
         }
 
+        [Test]
+        public async Task LotRepository_DeleteByIdAsync_DeletesEntity()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
 
+            var LotRepository = new LotRepository(context);
+
+            await LotRepository.DeleteByIdAsync(1);
+            await context.SaveChangesAsync();
+
+            Assert.That(context.Lots.Count(), Is.EqualTo(1), message: "DeleteByIdAsync works incorrect");
+        }
 
         private static IEnumerable<Lot> ExpectedLots =>
             new[]
