@@ -12,7 +12,19 @@ namespace AuctionTests.DAL.Tests
     [TestFixture]
     internal class OrderDetailRepositoryTests
     {
+        [TestCase(1)]
+        [TestCase(5)]
+        public async Task OrderDetailRepository_GetByIdAsync_ReturnsSingleValue(int id)
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
 
+            var orderDetailRepository = new OrderDetailRepository(context);
+            var orderDetail = await orderDetailRepository.GetByIdAsync(id);
+
+            var expected = ExpectedOrdersDetails.FirstOrDefault(x => x.Id == id);
+
+            Assert.That(orderDetail, Is.EqualTo(expected).Using(new OrderDetailEqualityComparer()), message: "GetByIdAsync method works incorrect");
+        }
 
 
         private static IEnumerable<OrderDetail> ExpectedOrdersDetails =>
