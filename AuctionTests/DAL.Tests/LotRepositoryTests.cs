@@ -102,6 +102,23 @@ namespace AuctionTests.DAL.Tests
             }).Using(new LotEqualityComparer()), message: "Update method works incorrect");
         }
 
+        [Test]
+        public async Task LotRepository_GetByIdWithDetailsAsync_ReturnsWithIncludedEntities()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var LotRepository = new LotRepository(context);
+
+            var lot = await LotRepository.GetByIdWithDetailsAsync(1);
+
+            var expected = ExpectedLots.FirstOrDefault(x => x.Id == 1);
+            var expectedOrderDetailsCount = 2;
+
+            Assert.That(lot, Is.EqualTo(expected).Using(new LotEqualityComparer()), message: "GetByIdWithDetailsAsync method works incorrect");
+            Assert.That(lot.OrderDetails.Count, Is.EqualTo(expectedOrderDetailsCount), message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+            Assert.That(lot.Photo, Is.Not.Null, message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+        }
+
         private static IEnumerable<Lot> ExpectedLots =>
             new[]
             {
