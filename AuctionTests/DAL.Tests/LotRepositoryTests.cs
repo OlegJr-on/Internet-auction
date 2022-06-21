@@ -39,6 +39,22 @@ namespace AuctionTests.DAL.Tests
             Assert.That(lots, Is.EqualTo(ExpectedLots).Using(new LotEqualityComparer()), message: "GetAllAsync method works incorrect");
         }
 
+        [Test]
+        public async Task LotRepository_AddAsync_AddsValueToDatabase()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var LotRepository = new LotRepository(context);
+            var lot = new Lot { Id = 3 };
+
+            await LotRepository.AddAsync(lot);
+            await context.SaveChangesAsync();
+
+            Assert.That(context.Lots.Count(), Is.EqualTo(3), message: "AddAsync method works incorrect");
+        }
+
+
+
         private static IEnumerable<Lot> ExpectedLots =>
             new[]
             {
