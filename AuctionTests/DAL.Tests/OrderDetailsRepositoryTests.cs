@@ -51,6 +51,19 @@ namespace AuctionTests.DAL.Tests
             Assert.That(context.OrderDetails.Count(), Is.EqualTo(6), message: "AddAsync method works incorrect");
         }
 
+        [Test]
+        public async Task OrderDetailRepository_DeleteByIdAsync_DeletesEntity()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var orderDetailRepository = new OrderDetailRepository(context);
+
+            await orderDetailRepository.DeleteByIdAsync(1);
+            await context.SaveChangesAsync();
+
+            Assert.That(context.OrderDetails.Count(), Is.EqualTo(4), message: "DeleteByIdAsync works incorrect");
+        }
+
 
 
         private static IEnumerable<OrderDetail> ExpectedOrdersDetails =>
