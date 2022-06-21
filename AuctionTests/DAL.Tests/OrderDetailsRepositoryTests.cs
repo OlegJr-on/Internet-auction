@@ -90,7 +90,21 @@ namespace AuctionTests.DAL.Tests
             }).Using(new OrderDetailEqualityComparer()), message: "Update method works incorrect");
         }
 
+        [Test]
+        public async Task OrderDetailRepository_GetAllWithDetailsAsync_ReturnsWithIncludedEntities()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
 
+            var orderDetailRepository = new OrderDetailRepository(context);
+
+            var orderDetails = await orderDetailRepository.GetAllWithDetailsAsync();
+            var orderDetail = orderDetails.FirstOrDefault(x => x.Id == 1);
+
+            Assert.That(orderDetails, Is.EqualTo(ExpectedOrdersDetails).Using(new OrderDetailEqualityComparer()), message: "GetAllWithDetailsAsync method works incorrect");
+            Assert.That(orderDetail.Lot, Is.Not.Null, message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+            Assert.That(orderDetail.Order, Is.Not.Null, message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+            Assert.That(orderDetail.Lot.Photo, Is.Not.Null, message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+        }
 
         private static IEnumerable<OrderDetail> ExpectedOrdersDetails =>
            new[]
