@@ -66,6 +66,42 @@ namespace AuctionTests.DAL.Tests
             Assert.That(context.Lots.Count(), Is.EqualTo(1), message: "DeleteByIdAsync works incorrect");
         }
 
+        [Test]
+        public async Task LotRepository_Update_UpdatesEntity()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var LotRepository = new LotRepository(context);
+            var lot = new Lot
+            {
+                Id = 1,
+                Title = "2016 BMW 1er 116i Advantage",
+                Status = LotStatus.Created,
+                MinRate = 50,
+                StartDate = new DateTime(2022, 6, 20, 20, 0, 0),
+                EndDate = new DateTime(2022, 6, 22, 20, 0, 0),
+                StartPrice = 1600,
+                PhotoId = 1,
+                CurrentPrice = 2100.33M
+            };
+
+            LotRepository.Update(lot);
+            await context.SaveChangesAsync();
+
+            Assert.That(lot, Is.EqualTo(new Lot
+            {
+                Id = 1,
+                Title = "2016 BMW 1er 116i Advantage",
+                Status = LotStatus.Created,
+                MinRate = 50,
+                StartDate = new DateTime(2022, 6, 20, 20, 0, 0),
+                EndDate = new DateTime(2022, 6, 22, 20, 0, 0),
+                StartPrice = 1600,
+                PhotoId = 1,
+                CurrentPrice = 2100.33M
+            }).Using(new LotEqualityComparer()), message: "Update method works incorrect");
+        }
+
         private static IEnumerable<Lot> ExpectedLots =>
             new[]
             {
