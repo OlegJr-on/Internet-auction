@@ -113,6 +113,25 @@ namespace AuctionTests.DAL.Tests
                 Is.EqualTo(ExpectedUsers.FirstOrDefault(i => i.Id == expected.UserId)).Using(new UserEqualityComparer()), message: "GetByIdWithDetailsAsync method doesnt't return included entities");
         }
 
+        [Test]
+        public async Task OrderRepository_GetAllWithDetailsAsync_ReturnsWithIncludedEntities()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var orderRepository = new OrderRepository(context);
+
+            var orders = await orderRepository.GetAllWithDetailsAsync();
+
+            Assert.That(orders,
+                Is.EqualTo(ExpectedOrders).Using(new OrderEqualityComparer()), message: "GetAllWithDetailsAsync method works incorrect");
+
+            Assert.That(orders.SelectMany(i => i.OrderDetails).OrderBy(i => i.Id),
+                Is.EqualTo(ExpectedOrdersDetails).Using(new OrderDetailEqualityComparer()), message: "GetAllWithDetailsAsync method doesnt't return included entities");
+
+            Assert.That(orders.Select(i => i.User).Distinct().OrderBy(i => i.Id),
+                Is.EqualTo(ExpectedUsers).Using(new UserEqualityComparer()), message: "GetAllWithDetailsAsync method doesnt't return included entities");
+        }
+
 
 
         private static IEnumerable<Order> ExpectedOrders =>
