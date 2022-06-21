@@ -119,6 +119,23 @@ namespace AuctionTests.DAL.Tests
             Assert.That(lot.Photo, Is.Not.Null, message: "GetByIdWithDetailsAsync method doesnt't return included entities");
         }
 
+        [Test]
+        public async Task LotRepository_GetAllWithDetailsAsync_ReturnsWithIncludedEntities()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var LotRepository = new LotRepository(context);
+
+            var lots = await LotRepository.GetAllWithDetailsAsync();
+            var lot = lots.FirstOrDefault(x => x.Id == 1);
+
+            var expectedOrderDetailsCount = 2;
+
+            Assert.That(lots, Is.EqualTo(ExpectedLots).Using(new LotEqualityComparer()), message: "GetAllWithDetailsAsync method works incorrect");
+            Assert.That(lot.OrderDetails.Count, Is.EqualTo(expectedOrderDetailsCount), message: "GetAllWithDetailsAsync method doesnt't return included entities");
+            Assert.That(lot.Photo, Is.Not.Null, message: "GetByIdWithDetailsAsync method doesnt't return included entities");
+        }
+
         private static IEnumerable<Lot> ExpectedLots =>
             new[]
             {
