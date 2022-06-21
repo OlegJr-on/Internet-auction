@@ -37,6 +37,20 @@ namespace AuctionTests.DAL.Tests
             Assert.That(receiptDetails, Is.EqualTo(ExpectedOrdersDetails).Using(new OrderDetailEqualityComparer()), message: "GetAllAsync method works incorrect");
         }
 
+        [Test]
+        public async Task OrderDetailRepository_AddAsync_AddsValueToDatabase()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var orderDetailRepository = new OrderDetailRepository(context);
+            var orderDetail = new OrderDetail { Id = 6, OrderId = 2, LotId = 1 };
+
+            await orderDetailRepository.AddAsync(orderDetail);
+            await context.SaveChangesAsync();
+
+            Assert.That(context.OrderDetails.Count(), Is.EqualTo(6), message: "AddAsync method works incorrect");
+        }
+
 
 
         private static IEnumerable<OrderDetail> ExpectedOrdersDetails =>
