@@ -38,6 +38,22 @@ namespace AuctionTests.DAL.Tests
             Assert.That(orders, Is.EqualTo(ExpectedOrders).Using(new OrderEqualityComparer()), message: "GetAllAsync method works incorrect");
         }
 
+        [Test]
+        public async Task OrderRepository_AddAsync_AddsValueToDatabase()
+        {
+            using var context = new AuctionDbContext(UnitTestHelper.GetUnitTestDbOptions());
+
+            var orderRepository = new OrderRepository(context);
+            var order = new Order { Id = 4 };
+
+            await orderRepository.AddAsync(order);
+            await context.SaveChangesAsync();
+
+            Assert.That(context.Orders.Count(), Is.EqualTo(4), message: "AddAsync method works incorrect");
+        }
+
+
+
         private static IEnumerable<Order> ExpectedOrders =>
             new[]
             {
