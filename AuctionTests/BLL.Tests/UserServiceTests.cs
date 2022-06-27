@@ -15,6 +15,25 @@ namespace AuctionTests.BLL.Tests
 {
     public class UserServiceTests
     {
+        [Test]
+        public async Task UserService_GetAll_ReturnsAllUsers()
+        {
+            //arrange
+            var expected = GetTestUserModels;
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork
+                .Setup(x => x.UserRepository.GetAllWithDetailsAsync())
+                .ReturnsAsync(GetTestUserEntities.AsEnumerable());
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await userService.GetAllAsync();
+
+            //assert
+            actual.Should().BeEquivalentTo(expected);
+        }
 
 
 
