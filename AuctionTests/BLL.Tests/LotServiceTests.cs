@@ -171,6 +171,32 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [TestCase("2020-10-10", "2025-10-10")]
+        [TestCase("2025-10-10", "2022-10-10")]
+        public async Task LotService_AddAsync_ThrowsAuctionExceptionIfDateTimeIsIncorrect(DateTime Start, DateTime End)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.LotRepository.AddAsync(It.IsAny<Lot>()));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var product = new LotModel
+            {
+                Id = 1,
+                Title = "Audi",
+                PhotoId = 1,
+                StartDate = Start,
+                EndDate = End,
+                CurrentPrice = 2200
+            };
+
+            //act
+            Func<Task> act = async () => await lotService.AddAsync(product);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         private static IEnumerable<LotModel> LotModels =>
