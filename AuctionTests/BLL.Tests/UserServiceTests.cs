@@ -205,6 +205,25 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        public async Task UserService_UpdateAsync_ThrowsAuctionExceptionWithInvalidPassword(string password)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.Update(It.IsAny<User>()));
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var user = GetTestUserModels.First();
+            user.Password = password;
+
+            //act
+            Func<Task> act = async () => await userService.UpdateAsync(user);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         public List<UserModel> GetTestUserModels =>
