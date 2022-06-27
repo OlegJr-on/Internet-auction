@@ -1,7 +1,9 @@
 ﻿using DAL.Data;
 using DAL.Entities;
+using BLL;
 using Microsoft.EntityFrameworkCore;
 using System;
+using AutoMapper;
 
 namespace AuctionTests
 {
@@ -21,7 +23,14 @@ namespace AuctionTests
             return options;
         }
 
-       
+        public static IMapper CreateMapperProfile()
+        {
+            var myProfile = new Automapper();
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+
+            return new Mapper(configuration);
+        }
+
         public static void SeedData(AuctionDbContext context)
         {
             context.Users.AddRange(
