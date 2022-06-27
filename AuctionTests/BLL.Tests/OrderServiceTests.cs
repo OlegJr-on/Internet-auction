@@ -162,6 +162,26 @@ namespace AuctionTests.BLL.Tests
                 receiptDetail.OrderId == order.Id && receiptDetail.LotId == productId)), Times.Once);
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(11)]
+        public async Task OrderService_AddProduct_ThrowsAuctionExceptionIfLotDoesNotExist(int lotId)
+        {
+            //arrange
+            var order = new Order { Id = 1, UserId = 1 };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(x => x.OrderRepository.GetByIdWithDetailsAsync(It.IsAny<int>())).ReturnsAsync(order);
+            mockUnitOfWork.Setup(x => x.LotRepository.GetByIdAsync(It.IsAny<int>()));
+
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            Func<Task> act = async () => await orderService.AddLotAsync(lotId, 1);
+
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         private static IEnumerable<Order> GetTestOrdersEntities =>
