@@ -306,6 +306,32 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [TestCase(2000, new[] { 2, 3, 4 })]
+        [TestCase(5000, new[] { 3 })]
+        public async Task LotService_GetByFilter_ReturnsLotByMinPrice(int minPrice, IEnumerable<int> expectedLotIds)
+        {
+            //arrange
+            var expected = LotModels.Where(x => expectedLotIds.Contains(x.Id));
+            var filter = new FilterSearchModel { MinPrice = minPrice };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork
+                .Setup(x => x.LotRepository.GetAllWithDetailsAsync())
+                .ReturnsAsync(LotEntities.AsEnumerable());
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await lotService.GetByFilterAsync(filter);
+
+            //assert
+            actual.Should().BeEquivalentTo(expected, options =>
+                options.Excluding(x => x.OrderDetailsIds)
+            );
+        }
+
+
 
         private static IEnumerable<LotModel> LotModels =>
            new List<LotModel>
