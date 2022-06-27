@@ -246,6 +246,31 @@ namespace AuctionTests.BLL.Tests
             mockUnitOfWork.Verify(x => x.PhotoRepository.DeleteByIdAsync(id), Times.Once);
         }
 
+        [Test]
+        public async Task LotService_UpdateAsync_ThrowsAuctionExceptionsWithEmptyTitle()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.LotRepository.Update(It.IsAny<Lot>()));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var product = new LotModel
+            {
+                Id = 7,
+                Title = String.Empty,
+                PhotoId = 4,
+                StartDate = new DateTime(2022, 11, 25),
+                EndDate = new DateTime(2022, 12, 1),
+                CurrentPrice = 2100.00m
+            };
+
+            //act
+            Func<Task> act = async () => await lotService.UpdateAsync(product);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         private static IEnumerable<LotModel> LotModels =>
