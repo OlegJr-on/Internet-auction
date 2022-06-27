@@ -224,7 +224,27 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [TestCase(2, new[] { 1, 3 })]
+        [TestCase(3, new[] { 1, 2 })]
+        [TestCase(1, new[] { 1, 2, 3 })]
+        public async Task UserService_GetUsersByLotIdAsync_ReturnsUsersWhoBoughtLot(int lotId, int[] expectedUserIds)
+        {
+            //arrange
+            var expected = GetTestUserModels.Where(x => expectedUserIds.Contains(x.Id)).ToList();
 
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(m => m.UserRepository.GetAllWithDetailsAsync())
+                .ReturnsAsync(GetTestUserEntities.AsQueryable());
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await userService.GetUsersByLotIdAsync(lotId);
+
+            //assert
+            actual.Should().BeEquivalentTo(expected);
+        }
 
         public List<UserModel> GetTestUserModels =>
            new List<UserModel>()
