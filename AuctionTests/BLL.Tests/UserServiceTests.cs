@@ -55,6 +55,26 @@ namespace AuctionTests.BLL.Tests
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [Test]
+        public async Task UserService_AddAsync_AddsModel()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.AddAsync(It.IsAny<User>()));
+
+            var UserService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var customer = GetTestUserModels.First();
+
+            //act
+            await UserService.AddAsync(customer);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.UserRepository.AddAsync(It.Is<User>(x =>
+                            x.Id == customer.Id && x.Password == customer.Password &&
+                            x.Surname == customer.Surname && x.Name == customer.Name &&
+                            x.PhoneNumber == customer.PhoneNumber && x.Email == customer.Email)), Times.Once);
+        }
+
 
 
 
