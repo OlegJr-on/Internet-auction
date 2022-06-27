@@ -331,6 +331,32 @@ namespace AuctionTests.BLL.Tests
             );
         }
 
+        [TestCase("2022-6-1", "2022-8-15", 3000, 4000, new[] { 2, 4 })]
+        [TestCase("2022-7-10", "2022-8-1", null, null, new[] { 3, 4 })]
+
+        public async Task LotService_GetByFilter_ReturnsLotByFilter(DateTime start, DateTime end,
+            int? minPrice, int? maxPrice, IEnumerable<int> expectedLotIds)
+        {
+            //arrange
+            var expected = LotModels.Where(x => expectedLotIds.Contains(x.Id)).ToList();
+            var filter = new FilterSearchModel { BeginningPeriod = start, EndPeriod = end, MinPrice = minPrice, MaxPrice = maxPrice };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork
+                .Setup(x => x.LotRepository.GetAllWithDetailsAsync())
+                .ReturnsAsync(LotEntities.AsEnumerable());
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await lotService.GetByFilterAsync(filter);
+
+            //assert
+            actual.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.OrderDetailsIds));
+        }
+
+
 
 
         private static IEnumerable<LotModel> LotModels =>
