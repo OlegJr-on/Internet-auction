@@ -168,6 +168,24 @@ namespace AuctionTests.BLL.Tests
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);
         }
 
+        [Test]
+        public async Task UserService_UpdateAsync_ThrowsAuctionExceptionWithEmptySurname()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.Update(It.IsAny<User>()));
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var user = GetTestUserModels.Last();
+            user.Surname = null;
+
+            //act
+            Func<Task> act = async () => await userService.UpdateAsync(user);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         public List<UserModel> GetTestUserModels =>
