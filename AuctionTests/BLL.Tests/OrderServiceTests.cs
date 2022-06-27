@@ -15,6 +15,27 @@ namespace AuctionTests.BLL.Tests
 {
     public class OrderServiceTests
     {
+        [Test]
+        public async Task OrderService_GetAll_ReturnsAllOrders()
+        {
+            //arrange
+            var expected = GetTestOrdersModels;
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork
+                .Setup(x => x.OrderRepository.GetAllWithDetailsAsync())
+                .ReturnsAsync(GetTestOrdersEntities.AsEnumerable());
+
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await orderService.GetAllAsync();
+
+            //assert
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+
 
 
         private static IEnumerable<Order> GetTestOrdersEntities =>
