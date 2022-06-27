@@ -36,6 +36,27 @@ namespace AuctionTests.BLL.Tests
                 options.Excluding(x => x.OrderDetailsIds));
         }
 
+        [Test]
+        public async Task LotService_GetAllPhotosAsync_ReturnsAllPhotos()
+        {
+            //arrange
+            var expected = PhotoModels;
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork
+                .Setup(x => x.PhotoRepository.GetAllAsync())
+                .ReturnsAsync(PhotoEntities.AsEnumerable());
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await lotService.GetAllPhotosAsync();
+
+            //assert
+            actual.Should().BeEquivalentTo(expected, options =>
+                options.Excluding(x => x.Id));
+        }
+
 
 
 
