@@ -94,6 +94,22 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [Test]
+        public async Task UserService_AddAsync_ThrowsAuctionExceptionWithNullObject()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.AddAsync(It.IsAny<User>()));
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            Func<Task> act = async () => await userService.AddAsync(null);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         public List<UserModel> GetTestUserModels =>
