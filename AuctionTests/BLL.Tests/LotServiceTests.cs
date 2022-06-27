@@ -271,6 +271,24 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [Test]
+        public async Task LotService_UpdatePhotoAsync_UpdatesPhoto()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.PhotoRepository.Update(It.IsAny<Photo>()));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var photo = new PhotoModel { Id = 77, PhotoSrc = "Photo1", GroupOfPhoto = 1 };
+
+            //act
+            await lotService.UpdatePhotoAsync(photo);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.PhotoRepository.Update(It.Is<Photo>(c => c.Id == photo.Id && photo.PhotoSrc == c.PhotoSrc)), Times.Once);
+            mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);
+        }
+
 
 
         private static IEnumerable<LotModel> LotModels =>
