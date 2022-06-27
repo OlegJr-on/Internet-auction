@@ -73,6 +73,23 @@ namespace AuctionTests.BLL.Tests
             mockUnitOfWork.Verify(x => x.OrderRepository.AddAsync(It.Is<Order>(c => c.Id == receipt.Id)), Times.Once);
         }
 
+        [Test]
+        public async Task OrderService_UpdateAsync_UpdatesOrder()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.OrderRepository.Update(It.IsAny<Order>()));
+
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var order = GetTestOrdersModels.First();
+
+            //act
+            await orderService.UpdateAsync(order);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.OrderRepository.Update(It.Is<Order>(order => order.Id == order.Id)), Times.Once);
+            mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);
+        }
 
 
 
