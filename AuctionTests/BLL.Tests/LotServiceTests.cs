@@ -15,6 +15,29 @@ namespace AuctionTests.BLL.Tests
 {
     public class LotServiceTests
     {
+        [Test]
+        public async Task LotService_GetAll_ReturnsAllLots()
+        {
+            //arrange
+            var expected = LotModels.ToList();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork
+                .Setup(x => x.LotRepository.GetAllWithDetailsAsync())
+                .ReturnsAsync(LotEntities.AsEnumerable());
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await lotService.GetAllAsync();
+
+            //assert
+            actual.Should().BeEquivalentTo(expected, options =>
+                options.Excluding(x => x.OrderDetailsIds));
+        }
+
+
+
 
         private static IEnumerable<LotModel> LotModels =>
            new List<LotModel>
