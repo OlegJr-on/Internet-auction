@@ -146,6 +146,28 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [Test]
+        public async Task UserService_UpdateAsync_UpdateUser()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.Update(It.IsAny<User>()));
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var user = GetTestUserModels.First();
+
+            //act
+            await userService.UpdateAsync(user);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.UserRepository.Update(It.Is<User>(x =>
+                x.Id == user.Id && x.Password == user.Password &&
+                x.Surname == user.Surname && x.Name == user.Name &&
+                x.PhoneNumber == user.PhoneNumber)), Times.Once);
+
+            mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);
+        }
+
 
 
         public List<UserModel> GetTestUserModels =>
