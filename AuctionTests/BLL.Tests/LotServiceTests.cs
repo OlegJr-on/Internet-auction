@@ -79,6 +79,33 @@ namespace AuctionTests.BLL.Tests
               options.Excluding(x => x.OrderDetailsIds));
         }
 
+        [Test]
+        public async Task LotService_AddAsync_AddsLot()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.LotRepository.AddAsync(It.IsAny<Lot>()));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var product = new LotModel
+            {
+                Id = 1,
+                Title = "BMW M5 F90",
+                PhotoId = 1,
+                CurrentPrice = 63000.99m,
+                StartDate = new DateTime(2022, 11, 11),
+                EndDate = new DateTime(2022, 11, 16),
+            };
+
+            //act
+            await lotService.AddAsync(product);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.LotRepository.AddAsync(It.Is<Lot>(c => c.Id == product.Id &&
+                        c.PhotoId == product.PhotoId && c.CurrentPrice == product.CurrentPrice
+                        && c.Title == product.Title)), Times.Once);
+        }
+
 
 
 
