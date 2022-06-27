@@ -197,6 +197,23 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [Test]
+        public async Task LotService_AddPhotoAsync_ThrowsAuctionExceptionWithEmptyPhotoSrc()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.PhotoRepository.AddAsync(It.IsAny<Photo>()));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var photo = new PhotoModel { Id = 1, PhotoSrc = "" };
+
+            //act
+            Func<Task> act = async () => await lotService.AddPhotoAsync(photo);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         private static IEnumerable<LotModel> LotModels =>
