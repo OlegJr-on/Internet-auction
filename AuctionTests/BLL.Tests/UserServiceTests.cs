@@ -110,6 +110,23 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(100)]
+        public async Task UserService_DeleteAsync_DeletesUser(int id)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.DeleteByIdAsync(It.IsAny<int>()));
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            await userService.DeleteAsync(id);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.UserRepository.DeleteByIdAsync(id), Times.Once());
+        }
+
 
 
         public List<UserModel> GetTestUserModels =>
