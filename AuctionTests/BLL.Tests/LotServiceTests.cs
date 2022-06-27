@@ -214,6 +214,22 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task LotService_DeleteAsync_DeleteLot(int id)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.LotRepository.DeleteByIdAsync(It.IsAny<int>()));
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            await lotService.DeleteAsync(id);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.LotRepository.DeleteByIdAsync(id), Times.Once);
+        }
+
 
 
         private static IEnumerable<LotModel> LotModels =>
