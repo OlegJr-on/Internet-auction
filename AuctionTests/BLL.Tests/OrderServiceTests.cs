@@ -91,6 +91,25 @@ namespace AuctionTests.BLL.Tests
             mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(4)]
+        public async Task OrderService_GetOrderDetailsAsync_ReturnsDetailsByOrderId(int receiptId)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(x => x.OrderRepository.GetByIdWithDetailsAsync(It.IsAny<int>()))
+                .ReturnsAsync(GetTestOrdersEntities.FirstOrDefault(x => x.Id == receiptId));
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await orderService.GetOrderDetailsAsync(receiptId);
+
+            //assert
+            var expected = GetTestOrdersEntities.FirstOrDefault(x => x.Id == receiptId)?.OrderDetails;
+
+            actual.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Lot).Excluding(x => x.Order));
+        }
 
 
         private static IEnumerable<Order> GetTestOrdersEntities =>
