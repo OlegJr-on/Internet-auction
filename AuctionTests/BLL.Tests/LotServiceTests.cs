@@ -57,6 +57,28 @@ namespace AuctionTests.BLL.Tests
                 options.Excluding(x => x.Id));
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task LotService_GetById_ReturnsLotModel(int id)
+        {
+            //arrange
+            var expected = LotModels.FirstOrDefault(x => x.Id == id);
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.LotRepository.GetByIdWithDetailsAsync(It.IsAny<int>()))
+                .ReturnsAsync(LotEntities.FirstOrDefault(x => x.Id == id));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await lotService.GetByIdAsync(1);
+
+            //assert
+            actual.Should().BeEquivalentTo(expected, options =>
+              options.Excluding(x => x.OrderDetailsIds));
+        }
+
 
 
 
