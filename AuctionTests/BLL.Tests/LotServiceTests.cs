@@ -230,6 +230,22 @@ namespace AuctionTests.BLL.Tests
             mockUnitOfWork.Verify(x => x.LotRepository.DeleteByIdAsync(id), Times.Once);
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task LotService_RemovePhotoAsync_DeletesPhoto(int id)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.PhotoRepository.DeleteByIdAsync(It.IsAny<int>()));
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            await lotService.RemovePhotoAsync(id);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.PhotoRepository.DeleteByIdAsync(id), Times.Once);
+        }
+
 
 
         private static IEnumerable<LotModel> LotModels =>
