@@ -111,6 +111,25 @@ namespace AuctionTests.BLL.Tests
             actual.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Lot).Excluding(x => x.Order));
         }
 
+        [TestCase("2022-8-1", "2022-9-15", new[] { 2, 3 })]
+        [TestCase("2022-10-1", "2022-12-29", new[] { 1 })]
+        [TestCase("2022-7-1", "2022-8-20", new[] { 2, 4 })]
+        public async Task OrderService_GetOrdersByPeriodAsync_ReturnsOrdersInPeriod(DateTime startDate, DateTime endDate, IEnumerable<int> expectedReceiptIds)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(x => x.OrderRepository.GetAllWithDetailsAsync()).ReturnsAsync(GetTestOrdersEntities.AsEnumerable());
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await orderService.GetOrdersByPeriodAsync(startDate, endDate);
+
+            //assert
+            var expected = GetTestOrdersModels.Where(x => expectedReceiptIds.Contains(x.Id));
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
 
         private static IEnumerable<Order> GetTestOrdersEntities =>
           new List<Order>()
