@@ -143,6 +143,35 @@ namespace AuctionTests.BLL.Tests
 
 
 
+        [TestCase(-5000.50)]
+        [TestCase(-500000)]
+        [TestCase(-0.0001)]
+        public async Task LotService_AddAsync_ThrowsAuctionExceptionIfPriceIsNegative(decimal price)
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.LotRepository.AddAsync(It.IsAny<Lot>()));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var product = new LotModel
+            {
+                Id = 1,
+                Title = "Audi",
+                PhotoId = 1,
+                StartDate = new DateTime(2022, 10, 10),
+                EndDate = new DateTime(2022, 10, 15)
+                ,
+                CurrentPrice = price
+            };
+
+            //act
+            Func<Task> act = async () => await lotService.AddAsync(product);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
+
 
         private static IEnumerable<LotModel> LotModels =>
            new List<LotModel>
