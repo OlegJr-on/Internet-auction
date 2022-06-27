@@ -127,6 +127,25 @@ namespace AuctionTests.BLL.Tests
             mockUnitOfWork.Verify(x => x.UserRepository.DeleteByIdAsync(id), Times.Once());
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        public async Task UserService_AddAsync_ThrowsAuctionExceptionWithInvalidDate(string email)
+        {
+            //arrange 
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.UserRepository.AddAsync(It.IsAny<User>()));
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var user = GetTestUserModels.First();
+            user.Email = email;
+
+            //act
+            Func<Task> act = async () => await userService.AddAsync(user);
+
+            //assert
+            await act.Should().ThrowAsync<AuctionException>();
+        }
+
 
 
         public List<UserModel> GetTestUserModels =>
