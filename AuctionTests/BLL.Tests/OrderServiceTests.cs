@@ -130,6 +130,39 @@ namespace AuctionTests.BLL.Tests
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [TestCase]
+        public async Task OrderService_AddLotAsync_CreatesOrderDetailIfLotWasNotAddedBefore()
+        {
+            //arrange 
+            var productId = 4;
+
+            var order = new Order
+            {
+                Id = 1,
+                User = new User { Id = 1 },
+                OrderDetails = new List<OrderDetail> {
+                new OrderDetail { Id = 1, LotId = 1,OrderId = 1 },
+                new OrderDetail { Id = 2, LotId = 2, OrderId = 1 },
+                new OrderDetail { Id = 3, LotId = 3, OrderId = 1 }
+            }
+            };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(x => x.OrderRepository.GetByIdWithDetailsAsync(It.IsAny<int>())).ReturnsAsync(order);
+            mockUnitOfWork.Setup(x => x.LotRepository.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(LotEntities.FirstOrDefault(x => x.Id == productId));
+            mockUnitOfWork.Setup(x => x.OrderDetailRepository.AddAsync(It.IsAny<OrderDetail>()));
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            await orderService.AddLotAsync(productId, 1);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.OrderDetailRepository.AddAsync(It.Is<OrderDetail>(receiptDetail =>
+                receiptDetail.OrderId == order.Id && receiptDetail.LotId == productId)), Times.Once);
+        }
+
+
 
         private static IEnumerable<Order> GetTestOrdersEntities =>
           new List<Order>()
