@@ -35,6 +35,28 @@ namespace AuctionTests.BLL.Tests
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        public async Task OrderService_GetById_ReturnsOrderModel(int id)
+        {
+            //arrange
+            var expected = GetTestOrdersModels.FirstOrDefault(x => x.Id == id);
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork
+                .Setup(x => x.OrderRepository.GetByIdWithDetailsAsync(It.IsAny<int>()))
+                .ReturnsAsync(GetTestOrdersEntities.FirstOrDefault(x => x.Id == id));
+
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await orderService.GetByIdAsync(1);
+
+            //assert
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+
 
 
 
