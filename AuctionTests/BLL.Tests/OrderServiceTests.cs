@@ -56,6 +56,22 @@ namespace AuctionTests.BLL.Tests
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [Test]
+        public async Task OrderService_AddAsync_AddsOrder()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.OrderRepository.AddAsync(It.IsAny<Order>()));
+
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var receipt = GetTestOrdersModels.First();
+
+            //act
+            await orderService.AddAsync(receipt);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.OrderRepository.AddAsync(It.Is<Order>(c => c.Id == receipt.Id)), Times.Once);
+        }
 
 
 
