@@ -201,6 +201,35 @@ namespace AuctionTests.BLL.Tests
             await act.Should().ThrowAsync<AuctionException>();
         }
 
+        [Test]
+        public async Task OrderService_RemoveLotAsync_DeletesDetail()
+        {
+
+            //arrange
+            var order = new Order
+            {
+                Id = 1,
+                OrderDetails = new List<OrderDetail>
+                {
+                    new OrderDetail { Id = 1, LotId = 1, OrderId = 1 },
+                    new OrderDetail { Id = 2, LotId = 2, OrderId = 1 },
+                    new OrderDetail { Id = 3, LotId = 3, OrderId = 1 }
+                }
+            };
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(x => x.OrderRepository.GetByIdWithDetailsAsync(It.IsAny<int>())).ReturnsAsync(order);
+            mockUnitOfWork.Setup(x => x.OrderDetailRepository.Delete(It.IsAny<OrderDetail>()));
+            var orderService = new OrderService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            await orderService.RemoveLotAsync(1, 1);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.OrderDetailRepository.Delete(It.Is<OrderDetail>
+                (od => od.OrderId == order.Id && od.LotId == 1)), Times.Once());
+            mockUnitOfWork.Verify(x => x.SaveAsync(), Times.Once);
+        }
 
 
         private static IEnumerable<Order> GetTestOrdersEntities =>
