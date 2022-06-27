@@ -106,6 +106,24 @@ namespace AuctionTests.BLL.Tests
                         && c.Title == product.Title)), Times.Once);
         }
 
+        [Test]
+        public async Task LotService_AddPhotoAsync_AddsPhoto()
+        {
+            //arrange
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            mockUnitOfWork.Setup(m => m.PhotoRepository.AddAsync(It.IsAny<Photo>()));
+
+            var lotService = new LotService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+            var photo = new PhotoModel { Id = 1, PhotoSrc = "Photo1", GroupOfPhoto = 1 };
+
+            //act
+            await lotService.AddPhotoAsync(photo);
+
+            //assert
+            mockUnitOfWork.Verify(x => x.PhotoRepository.AddAsync(It.Is<Photo>(
+                                c => c.Id == photo.Id && c.PhotoSrc == photo.PhotoSrc)), Times.Once);
+        }
+
 
 
 
