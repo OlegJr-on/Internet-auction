@@ -35,6 +35,26 @@ namespace AuctionTests.BLL.Tests
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [Test]
+        public async Task UserService_GetById_ReturnsUserModel()
+        {
+            //arrange
+            var expected = GetTestUserModels.First();
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+
+            mockUnitOfWork
+                .Setup(m => m.UserRepository.GetByIdWithDetailsAsync(It.IsAny<int>()))
+                .ReturnsAsync(GetTestUserEntities.First());
+
+            var userService = new UserService(mockUnitOfWork.Object, UnitTestHelper.CreateMapperProfile());
+
+            //act
+            var actual = await userService.GetByIdAsync(1);
+
+            //assert
+            actual.Should().BeEquivalentTo(expected);
+        }
+
 
 
 
