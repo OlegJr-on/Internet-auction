@@ -1,6 +1,7 @@
 ﻿using DAL.Entities;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using BLL.Models;
 
 namespace AuctionTests
 {
@@ -87,4 +88,52 @@ namespace AuctionTests
         }
     }
 
+    internal class CustomerModelEqualityComparer : IEqualityComparer<UserModel>
+    {
+        public bool Equals([AllowNull] UserModel x, [AllowNull] UserModel y)
+        {
+            if (x == null && y == null)
+                return true;
+            if (x == null || y == null)
+                return false;
+
+            return x.Id == y.Id &&
+                x.Name == y.Name &&
+                x.Surname == y.Surname &&
+                x.PhoneNumber == y.PhoneNumber &&
+                x.Password == y.Password &&
+                x.Email == y.Email &&
+                x.Location == y.Location;
+        }
+
+        public int GetHashCode([DisallowNull] UserModel obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
+    internal class LotModelEqualityComparer : IEqualityComparer<LotModel>
+    {
+        public bool Equals([AllowNull] LotModel x, [AllowNull] LotModel y)
+        {
+            if (x == null && y == null)
+                return true;
+            if (x == null || y == null)
+                return false;
+
+            return x.Id == y.Id &&
+                x.PhotoId == y.PhotoId &&
+                string.Equals(x.Title, y.Title) &&
+                string.Equals(x.StartPrice, y.StartPrice) &&
+                x.CurrentPrice == y.CurrentPrice &&
+                x.MinRate == y.MinRate &&
+                x.StartDate == y.StartDate &&
+                x.EndDate == y.EndDate;
+        }
+
+        public int GetHashCode([DisallowNull] LotModel obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
 }
