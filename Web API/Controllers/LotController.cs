@@ -163,5 +163,40 @@ namespace Web_API.Controllers
             return Ok(photos);
         }
 
+        /// <summary>
+        /// Get lot by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/lot/GetById/id
+        /// 
+        /// </remarks>
+        /// <param name="id">Lot id</param>
+        /// <returns> Lot with the desired id </returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<LotModel>> GetById(int id)
+        {
+            LotModel model;
+            try
+            {
+                model = await _lotService.GetByIdAsync(id);
+
+                if (model == null)
+                    return NotFound();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(model);
+        }
+
+
+
     }
 }
