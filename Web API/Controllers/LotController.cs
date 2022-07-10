@@ -96,5 +96,41 @@ namespace Web_API.Controllers
             return Ok(lots);
         }
 
+        /// <summary>
+        /// Get All photos
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/lot/GetPhotos
+        /// 
+        /// </remarks>
+        /// <returns> A list of existed photos</returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<PhotoModel>>> GetPhotos()
+        {
+            IEnumerable<PhotoModel> photos;
+            try
+            {
+                photos = await _lotService.GetAllPhotosAsync();
+                if (photos == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+
+            return Ok(photos);
+        }
+
+
+
     }
 }
