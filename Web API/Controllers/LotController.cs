@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Web_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class LotController : ControllerBase
     {
@@ -26,6 +26,41 @@ namespace Web_API.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Get all the lots with the title photo
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/lot/GetAllLotsWithPhoto
+        /// 
+        /// </remarks>
+        /// <returns> A list of existed lot</returns>
+        [HttpGet]
+        public JsonResult GetAllLotsWithPhoto()
+        {
+
+            string query = @"SELECT  lots.id,lots.Title,lots.StartPrice,lots.StartDate,lots.EndDate, ph.PhotoSrc
+                             FROM dbo.Lots AS lots
+                             JOIN dbo.Photos AS ph 
+                             ON ph.id = lots.PhotoId";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("AppCon");
+            SqlDataReader myReader;
+            using (SqlConnection connection = new SqlConnection(sqlDataSource))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    myReader = command.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    connection.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
 
     }
 }
