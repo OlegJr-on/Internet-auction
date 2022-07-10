@@ -123,5 +123,37 @@ namespace Web_API.Controllers
             return Ok(od);
         }
 
+        /// <summary>
+        /// Get orders by date period
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/order/GetOrdersByPeriod
+        /// 
+        /// </remarks>
+        /// <returns> Get orders for the specified period </returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<OrderModel>>> GetOrdersByPeriod(DateTime startDate, DateTime endDate)
+        {
+            IEnumerable<OrderModel> orders;
+            try
+            {
+                orders = await _orderService.GetOrdersByPeriodAsync(startDate, endDate);
+
+                if (orders == null)
+                    return NotFound();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(orders);
+        }
+
     }
 }
