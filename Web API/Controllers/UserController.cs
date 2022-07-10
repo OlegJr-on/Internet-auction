@@ -46,6 +46,88 @@ namespace Web_API.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Get the current user
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/user/GetCurrentUser
+        /// 
+        /// </remarks>
+        /// <returns> The current user who is authorized</returns>
+        /// <response code="200" >Success</response>
+        /// <response code="400" >Bad Request</response>
+        /// <response code="404" >Not Found</response>
+        /// <response code="401" >Not Authorized</response>
+        /// <response code="403" >Don`t have access</response>
+        [HttpGet]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<UserModel>> GetCurrentUser()
+        {
+            var Current_user = CurrentUser();
+            UserModel WantedUser = null;
+            try
+            {
+                var allUsers = await _userService.GetAllAsync();
+
+                WantedUser = allUsers.FirstOrDefault(x => x.Email == Current_user.Email);
+
+                if (WantedUser == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(WantedUser);
+        }
+
+        /// <summary>
+        /// Get All users in system
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/user/get
+        /// 
+        /// </remarks>
+        /// <returns> A list of existed users</returns>
+        /// <response code="200" >Success</response>
+        /// <response code="400" >Bad Request</response>
+        /// <response code="404" >Not Found</response>
+        /// <response code="401" >Not Authorized</response>
+        /// <response code="403" >Don`t have access</response>
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<UserModel>>> Get()
+        {
+            IEnumerable<UserModel> users;
+            try
+            {
+                users = await _userService.GetAllAsync();
+                if (users == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+            return Ok(users);
+        }
+
 
     }
 }
