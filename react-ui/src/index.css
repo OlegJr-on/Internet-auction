@@ -6,8 +6,212 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+ 
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+nav{
+  padding: 0 1rem;
+  margin: 0;
 }
+
+nav ul{
+    width: 100%;
+    text-align: center;
+    display: block;
+  }
+  
+  .page-footer {
+    padding-top: 0;
+  }
+  
+  footer ul li a:hover{
+    text-decoration: underline;
+  }
+  
+.row{
+  margin-bottom: 0;
+}
+
+.auction{
+  display: flex;
+  flex-direction: column;
+} 
+
+.table-auction{
+  margin: 40px;
+  margin-bottom: 80px;
+  background-color: rgb(175, 170, 170);
+  width: 100%;
+  align-self: center;
+}
+
+.table-auction td{
+  text-align: center;
+}
+
+.table-auction thead th{
+  text-align: center;
+  border: 1px solid black;
+}
+
+.table-auction a{
+  color: rgb(70, 68, 68);
+}
+
+.table-auction a:hover{
+  color: rgb(43, 43, 155);
+}
+
+.table-auction td:nth-child(1){
+  padding: 5px;
+}
+
+
+.home-page {
+  width:40%;
+  text-align: left;
+  display: grid;
+}
+
+.home-page .photos{
+  display: block;
+}
+.home-page .photos img{
+  height: 100px;
+  width: 100px;
+}
+
+
+.container{
+  min-height: calc(100vh- 64px -190px);
+}
+
+footer {
+  margin-top: 20px;
+  left:0px;
+  bottom:0px;
+  height:190px;
+  width:100%;
+}
+
+
+.NotFoundPage-fragment{
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0 30px 0; 
+}
+
+.NotFoundPage-fragment img{
+  align-self: center;
+}
+
+.NotFoundPage-fragment .link{
+  align-self: center;
+}
+
+.NotFoundPage-fragment a{
+    color: white;
+}
+
+/* -------- REGISTRATION FORM -------------- */
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Overwrite default styles of hr */
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for the submit button */
+.registerbtn {
+  background-color: #357a37;
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.registerbtn:hover {
+  opacity: 1;
+}
+
+.form-group label{
+  color: gray;
+}
+
+/* Add a blue text color to links */
+a {
+  color: dodgerblue;
+}
+
+
+/* -------- SING_IN FORM --------*/
+
+
+/* Set a grey background color and center the text of the "sign in" section */
+.signin {
+  background-color: #f1f1f1;
+  text-align: center;
+}
+
+.registration-cssave{
+  padding:50px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.registration-cssave form {
+  align-self: center;
+  width: 40%;
+  margin-bottom: 50px;
+  max-width:1500px;
+  padding:50px 70px;
+  border-radius:10px;
+  box-shadow:4px 4px 15px rgba(0, 0, 0, 0.2);
+  background-color:#fff;
+}
+
+.registration-cssave form h3 {
+  font-weight:bold;
+  margin-bottom:30px;
+}
+
+.registration-cssave .item {
+  border-radius:10px;
+  margin-bottom:25px;
+  padding:10px 20px;
+}
+
+.registration-cssave .create-account {
+  border-radius:30px;
+  text-align: center;
+  font-size:18px;
+  font-weight:bold;
+  background-color:#3f93ff;
+  border:none;
+  color:white;
+  margin-top:20px;
+}
+
+@media (max-width: 576px) {
+  .registration-cssave form {
+    padding:50px 20px;
+  }
+}
+
