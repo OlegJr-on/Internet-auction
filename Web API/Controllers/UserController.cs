@@ -141,18 +141,59 @@ namespace Web_API.Controllers
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
         [ProducesResponseType(StatusCodes.Status200OK)] // Ok
         public async Task<ActionResult<UserModel>> GetById(int id)
         {
-            var model = await _userService.GetByIdAsync(id);
+            UserModel model;
+            try
+            {
+                model = await _userService.GetByIdAsync(id);
 
-            if (model == null)
-                return NotFound();
+                if (model == null)
+                    return NotFound();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
 
             return model;
         }
 
+        /// <summary>
+        /// Get user by Lot id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/user/GetByLotId/id
+        /// 
+        /// </remarks>
+        /// <returns> User with the desired lot id </returns>
+        [HttpGet("{id}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<UserModel>> GetByLotId(int id)
+        {
+            IEnumerable<UserModel> users;
+            try
+            {
+                users = await _userService.GetUsersByLotIdAsync(id);
 
+                if (!users.Any())
+                {
+                    return NotFound("No such user found");
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest("Something went wrong :(");
+            }
+
+            return Ok(users);
+        }
 
     }
 }
