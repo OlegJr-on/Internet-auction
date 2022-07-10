@@ -62,5 +62,39 @@ namespace Web_API.Controllers
             return new JsonResult(table);
         }
 
+        /// <summary>
+        /// Get all lots with relevant information
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/lot/get
+        /// 
+        /// </remarks>
+        /// <returns> A list of existed lot</returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<LotModel>>> Get()
+        {
+            IEnumerable<LotModel> lots;
+            try
+            {
+                lots = await _lotService.GetAllAsync();
+                if (lots == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+
+            return Ok(lots);
+        }
+
     }
 }
