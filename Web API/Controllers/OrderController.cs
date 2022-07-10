@@ -236,6 +236,31 @@ namespace Web_API.Controllers
             return CreatedAtAction(nameof(Update), new { id = value.Id }, value);
         }
 
+        /// <summary>
+        /// Delete order by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     DELETE api/order/delete/id
+        /// 
+        /// </remarks>
+        /// <returns> Remoted order </returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status201Created)] // Created
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _orderService.DeleteAsync(id);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            return CreatedAtAction(nameof(Delete), new { id = id });
+        }
 
     }
 }
