@@ -1,3 +1,5 @@
+using AutoMapper;
+using BLL;
 using DAL.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -56,6 +58,14 @@ namespace Web_API
             //DB
             services.AddDbContext<AuctionDbContext>(options =>
               options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=AuctionDb;Trusted_Connection=True;"));
+
+            // Mapper
+            var mapperConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new Automapper());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
 
 
