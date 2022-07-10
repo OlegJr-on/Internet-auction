@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
@@ -15,6 +14,7 @@ namespace Web_API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IConfiguration _configuration;
@@ -70,7 +70,6 @@ namespace Web_API.Controllers
         /// </remarks>
         /// <returns> Order with the desired id </returns>
         [HttpGet("{id}")]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
         [ProducesResponseType(StatusCodes.Status200OK)] // Ok
