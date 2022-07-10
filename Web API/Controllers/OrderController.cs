@@ -181,5 +181,33 @@ namespace Web_API.Controllers
             return CreatedAtAction(nameof(Add), new { id = order.Id }, order);
         }
 
+        /// <summary>
+        /// Add order detail in db
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     POST api/order/AddOrderDetail
+        /// 
+        /// </remarks>
+        /// <param name="lotId">Lot id to be added to order detail</param>
+        /// <param name="orderId">Order id to be added to order detail</param>
+        /// <returns> Added order detail to database </returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> AddOrderDetail(int orderId, int lotId)
+        {
+            try
+            {
+                await _orderService.AddLotAsync(lotId, orderId);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
     }
 }

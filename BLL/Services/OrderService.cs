@@ -31,6 +31,9 @@ namespace BLL.Services
             await _unitOfWork.OrderRepository.AddAsync(receipt);
         }
 
+        /// <summary>
+        /// Add order detail in db
+        /// </summary>
         public async Task AddLotAsync(int lotId, int orderId)
         {
             var order = await _unitOfWork.OrderRepository.GetByIdWithDetailsAsync(orderId);
