@@ -7,11 +7,9 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Web_API.Models;
 using System.Security.Claims;
-using DAL.Entities;
 
 namespace Web_API.Controllers
 {
@@ -195,5 +193,85 @@ namespace Web_API.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Add user in db
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     POST api/user/add
+        /// 
+        /// </remarks>
+        /// <returns> Added user to database </returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> Add([FromBody] UserModel user)
+        {
+            try
+            {
+                await _userService.AddAsync(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return CreatedAtAction(nameof(Add), new { id = user.Id }, user);
+        }
+
+        /// <summary>
+        /// Update user
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     PUT api/user/update/id
+        /// 
+        /// </remarks>
+        /// <returns> Updated user in database </returns>
+        [HttpPut]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> Update([FromBody] UserModel user)
+        {
+            try
+            {
+                await _userService.UpdateAsync(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(Update), new { id = user.Id }, user);
+        }
+
+        /// <summary>
+        /// Delete user by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     DELETE api/user/delete/id
+        /// 
+        /// </remarks>
+        /// <returns> Remoted user </returns>
+        [HttpDelete("{id}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _userService.DeleteAsync(id);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            return CreatedAtAction(nameof(Delete), new { id });
+        }
     }
 }
