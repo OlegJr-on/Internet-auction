@@ -1,7 +1,9 @@
+using DAL.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -50,6 +52,11 @@ namespace Web_API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            //DB
+            services.AddDbContext<AuctionDbContext>(options =>
+              options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=AuctionDb;Trusted_Connection=True;"));
+
 
 
             services.AddControllers();
