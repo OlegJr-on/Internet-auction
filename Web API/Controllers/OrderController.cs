@@ -26,6 +26,38 @@ namespace Web_API.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Get All orders
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/order/get
+        /// 
+        /// </remarks>
+        /// <returns> A list of existed orders</returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<OrderModel>>> Get()
+        {
+            IEnumerable<OrderModel> orders;
+            try
+            {
+                orders = await _orderService.GetAllAsync();
+                if (orders == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(orders);
+        }
 
 
     }
