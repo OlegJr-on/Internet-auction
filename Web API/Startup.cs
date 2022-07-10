@@ -1,6 +1,9 @@
 using AutoMapper;
 using BLL;
+using BLL.Interfaces;
+using BLL.Services;
 using DAL.Data;
+using DAL.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -86,8 +89,12 @@ namespace Web_API
                });
             services.AddAuthorization();
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ILotService, LotService>();
+            services.AddScoped<IOrderService, OrderService>();
 
-
+            services.AddMvc();
             services.AddControllers();
         }
 
