@@ -209,5 +209,33 @@ namespace Web_API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Update order
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     PUT api/order/update
+        /// 
+        /// </remarks>
+        /// <returns> Updated order in database </returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status201Created)] // Created
+        public async Task<ActionResult> Update([FromBody] OrderModel value)
+        {
+            try
+            {
+                await _orderService.UpdateAsync(value);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(Update), new { id = value.Id }, value);
+        }
+
+
     }
 }
