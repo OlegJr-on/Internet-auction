@@ -36,7 +36,7 @@ namespace Web_API.Controllers
         }
 
         /// <summary>
-        /// This method is responsible for logging into the system
+        /// Responsible for logging into the system
         /// </summary>
         /// <returns> Status code </returns>
         [AllowAnonymous]
