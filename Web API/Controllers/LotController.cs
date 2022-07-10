@@ -130,7 +130,38 @@ namespace Web_API.Controllers
             return Ok(photos);
         }
 
-
+        /// <summary>
+        /// Get a photo according to the set group
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/lot/GetPhotoInGroup/id
+        /// 
+        /// </remarks>
+        /// <param name="lotId">Lot id, the photo of which we want to receive</param>
+        /// <returns> A list of lot photos</returns>
+        [HttpGet("{lotId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<PhotoModel>>> GetPhotoInGroup(int lotId)
+        {
+            IEnumerable<PhotoModel> photos;
+            try
+            {
+                photos = await _lotService.GetPhotosGroupByIdAsync(lotId);
+                if (photos == null)
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok(photos);
+        }
 
     }
 }
