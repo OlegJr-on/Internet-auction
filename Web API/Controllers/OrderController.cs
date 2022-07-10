@@ -91,7 +91,37 @@ namespace Web_API.Controllers
             return Ok(model);
         }
 
+        /// <summary>
+        /// Get order details by order id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/order/GetOrderDetailsById/id
+        /// 
+        /// </remarks>
+        /// <returns> Order details with the desired id </returns>
+        [HttpGet("{orderId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<OrderDetailModel>>> GetOrderDetailsById(int orderId)
+        {
+            IEnumerable<OrderDetailModel> od;
+            try
+            {
+                od = await _orderService.GetOrderDetailsAsync(orderId);
 
+                if (od == null)
+                    return NotFound();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(od);
+        }
 
     }
 }
