@@ -310,5 +310,85 @@ namespace Web_API.Controllers
             return CreatedAtAction(nameof(Delete), new { id });
         }
 
+        /// <summary>
+        /// Add photo in db
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     POST api/lot/AddPhoto
+        /// 
+        /// </remarks>
+        /// <returns> Added photo to database </returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> AddPhoto([FromBody] PhotoModel lot)
+        {
+            try
+            {
+                await _lotService.AddPhotoAsync(lot);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return CreatedAtAction(nameof(Add), new { id = lot.Id }, lot);
+        }
+
+        /// <summary>
+        /// Update photo
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     PUT api/lot/UpdatePhoto
+        /// 
+        /// </remarks>
+        /// <returns> Updated photo in database </returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> UpdatePhoto([FromBody] PhotoModel value)
+        {
+            try
+            {
+                await _lotService.UpdatePhotoAsync(value);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(Update), new { id = value.Id }, value);
+        }
+
+        /// <summary>
+        /// Delete photo by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     DELETE api/lot/delete/id
+        /// 
+        /// </remarks>
+        /// <param name="photoId">Id of the photo to be deleted </param>
+        /// <returns> Remoted photo </returns>
+        [HttpDelete("{photoId}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> DeletePhoto(int photoId)
+        {
+            try
+            {
+                await _lotService.RemovePhotoAsync(photoId);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return CreatedAtAction(nameof(Delete), new { id = photoId });
+        }
+
     }
 }
