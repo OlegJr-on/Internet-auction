@@ -196,7 +196,39 @@ namespace Web_API.Controllers
             return Ok(model);
         }
 
+        /// <summary>
+        /// Get lot by filter
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/lot/GetByFilterAsync
+        /// 
+        /// </remarks>
+        /// <returns> Lot with the specified criteria </returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<LotModel>>> GetByFilter(FilterSearchModel filter)
+        {
+            IEnumerable<LotModel> lots;
+            try
+            {
+                lots = await _lotService.GetByFilterAsync(filter);
 
+                if (!lots.Any())
+                {
+                    return NotFound("Lots not found.");
+                }
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(lots);
+        }
 
     }
 }
