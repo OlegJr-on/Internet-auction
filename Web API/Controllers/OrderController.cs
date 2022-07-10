@@ -262,5 +262,34 @@ namespace Web_API.Controllers
             return CreatedAtAction(nameof(Delete), new { id = id });
         }
 
+
+        /// <summary>
+        /// Delete order details by Lot_Id and Order_Id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     DELETE api/order/DeleteOrderDetail
+        /// 
+        /// </remarks>
+        /// <param name="lotId">Lot id, which to be removed to order detail</param>
+        /// <param name="orderId">Order id, which to be removed to order detail</param>
+        /// <returns> Removed OrderDetailsIds</returns>
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> DeleteOrderDetail(int lotId, int orderId)
+        {
+            try
+            {
+                await _orderService.RemoveLotAsync(lotId, orderId);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            return Ok();
+        }
+
     }
 }
