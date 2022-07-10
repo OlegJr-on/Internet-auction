@@ -155,5 +155,31 @@ namespace Web_API.Controllers
             return Ok(orders);
         }
 
+        /// <summary>
+        /// Add order in db
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     POST api/order/add
+        /// 
+        /// </remarks>
+        /// <returns> Added order to database </returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> Add([FromBody] OrderModel order)
+        {
+            try
+            {
+                await _orderService.AddAsync(order);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return CreatedAtAction(nameof(Add), new { id = order.Id }, order);
+        }
+
     }
 }
