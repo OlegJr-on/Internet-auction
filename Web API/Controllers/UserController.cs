@@ -27,6 +27,25 @@ namespace Web_API.Controllers
             _userService = userService;
             _configuration = configuration;
         }
+        private UserDTO CurrentUser()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                return new UserDTO
+                {
+                    Name = userClaims.FirstOrDefault(n => n.Type == ClaimTypes.NameIdentifier)?.Value,
+                    Surname = userClaims.FirstOrDefault(n => n.Type == ClaimTypes.Surname)?.Value,
+                    Email = userClaims.FirstOrDefault(n => n.Type == ClaimTypes.Email)?.Value,
+                    AccessLevel = userClaims.FirstOrDefault(n => n.Type == ClaimTypes.Role)?.Value,
+                };
+            }
+            return null;
+        }
+
 
     }
 }
