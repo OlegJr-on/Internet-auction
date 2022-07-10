@@ -128,6 +128,31 @@ namespace Web_API.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Get user by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/user/GetById/id
+        /// 
+        /// </remarks>
+        /// <returns> User with the desired id </returns>
+        [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<UserModel>> GetById(int id)
+        {
+            var model = await _userService.GetByIdAsync(id);
+
+            if (model == null)
+                return NotFound();
+
+            return model;
+        }
+
+
 
     }
 }
