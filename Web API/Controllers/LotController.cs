@@ -230,5 +230,85 @@ namespace Web_API.Controllers
             return Ok(lots);
         }
 
+
+        /// <summary>
+        /// Add lot in db
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     POST api/lot/add
+        /// 
+        /// </remarks>
+        /// <returns> Added lot to database </returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> Add([FromBody] LotModel lot)
+        {
+            try
+            {
+                await _lotService.AddAsync(lot);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return CreatedAtAction(nameof(Add), new { id = lot.Id }, lot);
+        }
+
+        /// <summary>
+        /// Update lot
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     PUT api/lot/update
+        /// 
+        /// </remarks>
+        /// <returns> Updated lot in database </returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> Update([FromBody] LotModel value)
+        {
+            try
+            {
+                await _lotService.UpdateAsync(value);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(Update), new { id = value.Id }, value);
+        }
+
+        /// <summary>
+        /// Delete lot by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     DELETE api/lot/delete/id
+        /// 
+        /// </remarks>
+        /// <returns> Remoted lot </returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                await _lotService.DeleteAsync(id);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+            return CreatedAtAction(nameof(Delete), new { id });
+        }
+
     }
 }
