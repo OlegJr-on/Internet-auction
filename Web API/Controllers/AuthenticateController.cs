@@ -10,7 +10,6 @@ using System.Linq;
 using System.Text;
 using Web_API.Models;
 using BLL.Models;
-using Web_API.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace Web_API.Controllers
