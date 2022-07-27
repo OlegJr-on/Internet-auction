@@ -2,6 +2,12 @@ import axios from 'axios'
 import { variables } from '../ApiEndPoints/Variables'
 import {setUser} from "../reducers/userReducer";
 
+export const data = {
+    User: {
+        "Email": "mandra@gmail.com",
+        "Password": "123456",
+    }
+}
 
 export const registration = async (name,surname,location,phoneNumber,email,password,accessLevel = 2 ) =>
 {
@@ -24,36 +30,21 @@ export const registration = async (name,surname,location,phoneNumber,email,passw
 }
 
 export const login =  (email, password) => {
+
     return async dispatch => {
        
         try {
-            const response = await axios.post(variables.API_URL+'Authenticate', 
-            { 
-                "EmailAddress" : email, 
-                "Password": password
-            })
-
-            console.log(response.data)
-            dispatch(setUser(response.data.User))
-            localStorage.setItem('token', response.data.token)
-
+            if(email != data.User.Email || password != data.User.Password){
+                alert('User not found')
+            }
+            else{
+            dispatch(setUser(data.User))
+            localStorage.setItem('token', data.token)
+            }
+            
         } catch (e) {
             alert(e)
         }
     }
+    
 }
-
-// export const auth =  () => {
-//     return async dispatch => {
-//         try {
-//             const response = await axios.get(`http://localhost:5000/api/auth/auth`,
-//                 {headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}}
-//             )
-//             dispatch(setUser(response.data.user))
-//             localStorage.setItem('token', response.data.token)
-//         } catch (e) {
-//             alert(e.response.data.message)
-//             localStorage.removeItem('token')
-//         }
-//     }
-// }
