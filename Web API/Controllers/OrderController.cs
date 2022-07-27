@@ -9,6 +9,7 @@ using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace Web_API.Controllers
 {
@@ -161,6 +162,29 @@ namespace Web_API.Controllers
             }
 
             return Ok(od);
+        }
+
+        /// <summary>
+        /// Get last order
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/order/GetLast
+        /// 
+        /// </remarks>
+        /// <returns> Order with the desired id </returns>
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<OrderModel>> GetLast()
+        {
+            var orders = await _orderService.GetAllAsync();
+
+            if (orders.LastOrDefault() == null)
+                return NotFound();
+
+            return Ok(orders.LastOrDefault());
         }
 
         /// <summary>
