@@ -8,7 +8,6 @@ import {Lot} from '../pages/Lot';
 import {Profile} from '../pages/UserProfile';
 import {Basket} from '../pages/Basket'
 import { NotFound } from '../pages/NotFound';
-// import { Congrats } from '../pages/Congrats';
 import React from 'react';
 import {useSelector} from 'react-redux'
 
@@ -32,7 +31,6 @@ function Main(){
                     }
                     <Route path='/Profile' element={<Profile/>}/>   
                     <Route path='/Basket' element={<Basket/>}/>                  
-                    {/* <Route path="/Congrats" element={ <Congrats/>} /> */}
                     <Route path="*" element={ <NotFound/>} />
                 </Routes>
             </main>

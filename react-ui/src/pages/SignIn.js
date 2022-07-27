@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import { login } from '../actions/user';
 import {useDispatch} from "react-redux";
-
+import { NavLink } from 'react-router-dom';
 
 export function SignIn(){
 
@@ -24,10 +24,12 @@ export function SignIn(){
                                 className="form-control item" type="password" name="password" minlength="6" id="password" placeholder="Password" required/>
                     </div>
                     <div className="form-group">
+                    <NavLink to="/" >
                         <button className="btn btn-primary btn-block create-account"
                                  type="submit" 
                                  disabled={!(!!(email)) || !(!!(password))}
                                  onClick={() => dispatch(login(email, password))}  >Sign In</button>
+                        </NavLink>
                     </div>
                 </form>
             </div>
