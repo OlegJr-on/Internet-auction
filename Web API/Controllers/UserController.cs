@@ -103,7 +103,6 @@ namespace Web_API.Controllers
         /// <response code="401" >Not Authorized</response>
         /// <response code="403" >Don`t have access</response>
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
         [ProducesResponseType(StatusCodes.Status200OK)] // Ok
@@ -137,7 +136,6 @@ namespace Web_API.Controllers
         /// </remarks>
         /// <returns> User with the desired id </returns>
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
         [ProducesResponseType(StatusCodes.Status200OK)] // Ok
@@ -230,7 +228,6 @@ namespace Web_API.Controllers
         /// </remarks>
         /// <returns> Updated user in database </returns>
         [HttpPut]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
         [ProducesResponseType(StatusCodes.Status200OK)] // Ok
         public async Task<ActionResult> Update([FromBody] UserModel user)
