@@ -15,7 +15,6 @@ namespace Web_API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IConfiguration _configuration;

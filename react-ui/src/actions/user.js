@@ -4,6 +4,7 @@ import {setUser} from "../reducers/userReducer";
 
 export const data = {
     User: {
+        "Id": 2,
         "Email": "mandra@gmail.com",
         "Password": "123456",
     }
