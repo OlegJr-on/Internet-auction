@@ -91,6 +91,47 @@ namespace Web_API.Controllers
         }
 
         /// <summary>
+        /// Get all orders for user by id
+        /// </summary>
+        /// <remarks>
+        /// Sample request
+        /// 
+        ///     GET api/order/GetAllUserOrdersById/id
+        /// 
+        /// </remarks>
+        /// <returns> A list of existed orders</returns>
+        [HttpGet("{id}")]
+        public JsonResult GetAllUserOrdersById(int id)
+        {
+
+            string query = $@"SELECT  lots.id,lots.Title,lots.EndDate,lots.CurrentPrice,orders.OperationDate,orders.Id as OrderId, ph.PhotoSrc
+                             FROM dbo.Orders as orders
+                             JOIN dbo.OrderDetails AS od
+                             ON od.OrderId = orders.id
+                             JOIN dbo.Lots AS lots
+                             ON lots.Id = od.LotId
+                             JOIN dbo.Photos AS ph 
+                             ON ph.id = lots.PhotoId
+                             WHERE orders.UserId = {id}";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("AppCon");
+            SqlDataReader myReader;
+            using (SqlConnection connection = new SqlConnection(sqlDataSource))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    myReader = command.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    connection.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+        /// <summary>
         /// Get order details by order id
         /// </summary>
         /// <remarks>
