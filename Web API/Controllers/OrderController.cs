@@ -237,12 +237,15 @@ namespace Web_API.Controllers
             try
             {
                 await _orderService.AddAsync(order);
+
             }
             catch (Exception)
             {
                 return BadRequest();
             }
-            return CreatedAtAction(nameof(Add), new { id = order.Id }, order);
+
+            var createdOrder = _orderService.GetAllAsync().Result.LastOrDefault();
+            return Ok(createdOrder.Id);
         }
 
         /// <summary>
