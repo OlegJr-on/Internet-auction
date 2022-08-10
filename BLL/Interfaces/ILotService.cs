@@ -9,6 +9,7 @@ namespace BLL.Interfaces
     {
         Task<IEnumerable<LotModel>> GetByFilterAsync(FilterSearchModel filterSearch);
         Task<IEnumerable<PhotoModel>> GetAllPhotosAsync();
+        Task<IEnumerable<object>> GetAllLotsWithPhoto();
         Task<IEnumerable<PhotoModel>> GetPhotosGroupByIdAsync(int id);
         Task AddPhotoAsync(PhotoModel photoModel);
         Task UpdatePhotoAsync(PhotoModel photoModel);

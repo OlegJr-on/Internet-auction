@@ -70,6 +70,13 @@ namespace BLL.Services
 
             return _mapper.Map<IEnumerable<LotModel>>(lots.ToList()); ;
         }
+        
+        public async Task<IEnumerable<object>> GetAllLotsWithPhoto()
+        {
+            var lots = await _unitOfWork.LotRepository.GetAllLotsWithPhoto();
+
+            return lots;
+        }
 
         public async Task<IEnumerable<PhotoModel>> GetAllPhotosAsync()
         {

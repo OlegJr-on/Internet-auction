@@ -45,9 +45,9 @@ export class Auction extends Component{
                             {lots.map(lot => 
                                 <tr key= {lot.Id}>
                                     <td><img height="65" width="75" src={lot.PhotoSrc}/></td>
-                                    <td>{lot.id}</td>
+                                    <td>{lot.Id}</td>
                                     <td> 
-                                        <NavLink  to={`${lot.id}`}>
+                                        <NavLink  to={`${lot.Id}`}>
                                             {lot.Title}
                                         </NavLink>
                                     </td>

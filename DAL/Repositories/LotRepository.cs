@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using DAL.Data;
 using DAL.Entities;
 using DAL.Interfaces;
@@ -37,6 +38,15 @@ namespace DAL.Repositories
         public async Task<IEnumerable<Lot>> GetAllAsync()
         {
             return await DbContext.Lots.ToListAsync();
+        }
+
+        public async Task<IEnumerable<object>> GetAllLotsWithPhoto()
+        {
+            return await DbContext.Lots.Join(DbContext.Photos,
+                lots => lots.PhotoId,
+                photo => photo.Id,
+                (lots, photo) => new { lots.Id, lots.Title, lots.StartPrice, lots.StartDate, lots.EndDate, photo.PhotoSrc }
+                ).ToListAsync();
         }
 
         public async Task<Lot> GetByIdAsync(int id)

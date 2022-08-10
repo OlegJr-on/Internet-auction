@@ -9,5 +9,7 @@ namespace DAL.Interfaces
         Task<IEnumerable<Lot>> GetAllWithDetailsAsync();
 
         Task<Lot> GetByIdWithDetailsAsync(int id);
+
+        Task<IEnumerable<object>> GetAllLotsWithPhoto();
     }
 }

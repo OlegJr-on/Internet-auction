@@ -67,7 +67,7 @@ export function Profile()
                     </table>
                 </div>
 
-                <div className='Update-data-user'>
+                {/* <div className='Update-data-user'>
                     <button class="btn waves-effect waves-light" type="submit" name="action">Update
                         <i class="material-icons right"> 
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -76,7 +76,7 @@ export function Profile()
                             </svg>
                         </i>
                     </button>
-                </div>
+                </div> */}
 
         </div>
         ) 

@@ -28,8 +28,8 @@ function MakeBid(price,lotId) {
 
             //   console.log(order)
               // create order detail
-            //   const responseOrderDetail = axios.post(`${variables.API_URL}order/AddLot?orderId=${order+1}&lotId=${lotId}`
-            //   )
+              const responseOrderDetail = axios.post(`${variables.API_URL}order/AddLot?orderId=12&lotId=${lotId}`
+              )
              
             
             alert("Congratulations. Order created ")

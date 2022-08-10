@@ -37,29 +37,26 @@ namespace Web_API.Controllers
         /// </remarks>
         /// <returns> A list of existed lot</returns>
         [HttpGet]
-        public JsonResult GetAllLotsWithPhoto()
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<LotModel>>> GetAllLotsWithPhoto()
         {
-
-            string query = @"SELECT  lots.id,lots.Title,lots.StartPrice,lots.StartDate,lots.EndDate, ph.PhotoSrc
-                             FROM dbo.Lots AS lots
-                             JOIN dbo.Photos AS ph 
-                             ON ph.id = lots.PhotoId";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("AppCon");
-            SqlDataReader myReader;
-            using (SqlConnection connection = new SqlConnection(sqlDataSource))
+            IEnumerable<object> lots;
+            try
             {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(query, connection))
+                lots = await _lotService.GetAllLotsWithPhoto();
+                if (lots == null)
                 {
-                    myReader = command.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    connection.Close();
+                    return NotFound();
                 }
             }
-            return new JsonResult(table);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(lots);
         }
 
         /// <summary>
