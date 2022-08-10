@@ -63,9 +63,9 @@ export class Basket extends Component
                                 {orders.map(order => 
                                     <tr key= {order.Id}>
                                         <td><img height="65" width="75" src={order.PhotoSrc}/></td>
-                                        <td>{order.id}</td>
+                                        <td>{order.Id}</td>
                                         <td> 
-                                            <NavLink  to={`/Auction/${order.id}`}>
+                                            <NavLink  to={`/Auction/${order.Id}`}>
                                                 {order.Title}
                                             </NavLink>
                                         </td>

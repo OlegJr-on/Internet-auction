@@ -74,6 +74,11 @@ namespace BLL.Services
             return _mapper.Map<IEnumerable<OrderModel>>(orders.ToList());
         }
 
+        public async Task<IEnumerable<object>> GetAllUserOrdersByIdAsync(int id)
+        {
+            return await _unitOfWork.OrderRepository.GetAllUserOrdersById(id);
+        }
+
         public async Task<OrderModel> GetByIdAsync(int id)
         {
             var order = await _unitOfWork.OrderRepository.GetByIdWithDetailsAsync(id);

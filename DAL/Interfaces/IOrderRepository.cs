@@ -9,5 +9,7 @@ namespace DAL.Interfaces
         Task<IEnumerable<Order>> GetAllWithDetailsAsync();
 
         Task<Order> GetByIdWithDetailsAsync(int id);
+
+        Task<IEnumerable<object>> GetAllUserOrdersById(int id);
     }
 }

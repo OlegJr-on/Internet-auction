@@ -13,6 +13,8 @@ namespace BLL.Interfaces
 
         Task<IEnumerable<OrderDetailModel>> GetOrderDetailsAsync(int orderId);
 
+        Task<IEnumerable<object>> GetAllUserOrdersByIdAsync(int id);
+
         Task<IEnumerable<OrderModel>> GetOrdersByPeriodAsync(DateTime startDate, DateTime endDate);
     }
 }

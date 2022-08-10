@@ -101,34 +101,26 @@ namespace Web_API.Controllers
         /// </remarks>
         /// <returns> A list of existed orders</returns>
         [HttpGet("{id}")]
-        public JsonResult GetAllUserOrdersById(int id)
+        [ProducesResponseType(StatusCodes.Status404NotFound)] // Not found
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] // Bad Request
+        [ProducesResponseType(StatusCodes.Status200OK)] // Ok
+        public async Task<ActionResult<IEnumerable<OrderModel>>> GetAllUserOrdersById(int id)
         {
-
-            string query = $@"SELECT  lots.id,lots.Title,lots.EndDate,lots.CurrentPrice,orders.OperationDate,orders.Id as OrderId, ph.PhotoSrc
-                             FROM dbo.Orders as orders
-                             JOIN dbo.OrderDetails AS od
-                             ON od.OrderId = orders.id
-                             JOIN dbo.Lots AS lots
-                             ON lots.Id = od.LotId
-                             JOIN dbo.Photos AS ph 
-                             ON ph.id = lots.PhotoId
-                             WHERE orders.UserId = {id}";
-
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("AppCon");
-            SqlDataReader myReader;
-            using (SqlConnection connection = new SqlConnection(sqlDataSource))
+            IEnumerable<object> orders;
+            try
             {
-                connection.Open();
-                using (SqlCommand command = new SqlCommand(query, connection))
+                orders = await _orderService.GetAllUserOrdersByIdAsync(id);
+                if (orders == null)
                 {
-                    myReader = command.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    connection.Close();
+                    return NotFound();
                 }
             }
-            return new JsonResult(table);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(orders);
         }
 
         /// <summary>
